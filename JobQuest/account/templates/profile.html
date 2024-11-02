@@ -1,0 +1,21 @@
+{% extends "layout/base.html" %}
+
+{% block title %}Profile | JobQuest{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <h1>Profile</h1>
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">{{ user.username }}</h4>
+            <p class="card-text"><strong>Userame:</strong> {{ user.username }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ user.email }}</p>
+            <p class="card-text"><strong>Date Joined:</strong> {{ user.date_joined }}</p>
+        </div>
+    </div>
+    <a href="{% url 'edit_profile' %}">edit profile</a>
+</div>
+
+
+{% endblock %}
