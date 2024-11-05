@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth.models import User
+from .models import LoginHistory
 
 # registration for job seeker
 def register_seeker(request):
@@ -94,3 +95,9 @@ def change_password(request):
         form = PasswordChangeForm(user=request.user)
 
     return render(request, "change_password.html", {'form': form})
+
+
+@login_required
+def login_history(request):
+    history = LoginHistory.objects.filter(user=request.user).order_by('-timestamp')
+    return render(request, 'login_history.html', {'history': history})

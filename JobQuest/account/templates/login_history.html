@@ -1,0 +1,33 @@
+{% extends "layout/base.html" %}
+
+{% block title %}Login History | JobQuest{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <h2>Login History</h2>
+    <table class="table table-bordered">
+        <tr>
+            <th>S.no</th>
+            <th>Date & Time</th>
+            <th>IP Address</th>
+            <th>Device Info</th>
+        </tr>
+        {% if not history %}
+        <tr class="text-center">
+            <td colspan="4">You have not a login history.</td>
+        </tr>
+        {% endif %}
+        {% for entry in history %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ entry.timestamp }}</td>
+                <td>{{ entry.ip_address }}</td>
+                <td>{{ entry.user_agent }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+
+
+{% endblock %}

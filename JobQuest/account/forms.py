@@ -36,8 +36,10 @@ class EditProfileForm(UserChangeForm):
             field.widget.attrs['class'] = 'form-control'  # Adding Bootstrap class
             field.widget.attrs['placeholder'] = field.label 
 
-
 class PasswordChangeForm(SetPasswordForm):
     old_password = forms.CharField(label='Old Password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     new_password1 = forms.CharField(label='New Password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     new_password2 = forms.CharField(label='Confirm New Password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+
+
