@@ -74,6 +74,15 @@ def custom_login(request):
             password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password)
             if user is not None:
+                try:
+                    employer_profile = EmployerProfile.objects.get(user=user)
+                except EmployerProfile.DoesNotExist:
+                    employer_profile = None
+                
+                if employer_profile is not None:
+                    login(request, user)
+                    return redirect('employer_dashboard')
+
                 login(request, user)
                 return redirect('home')  # redirect to home or desired page after login
             else:
