@@ -41,5 +41,26 @@ class PasswordChangeForm(SetPasswordForm):
     new_password1 = forms.CharField(label='New Password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     new_password2 = forms.CharField(label='Confirm New Password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
+class EmployerRegistrationForm(UserCreationForm):
+    email = forms.CharField(label='Email address')
+    address = forms.CharField(label='Address')
+    company_name = forms.CharField(label='Company name')
+    contact_person = forms.CharField(label='Contact person')
+    company_website = forms.URLField(label='Company website')
 
+    class meta:
+        model = User
+        field = ("username","email","password1","password2")
 
+    def __init__(self, *args, **kwargs):
+            super(EmployerRegistrationForm, self).__init__(*args, **kwargs)
+            for field_name, field in self.fields.items():
+                field.widget.attrs['class'] = 'form-control'  # Adding Bootstrap class
+                field.widget.attrs['placeholder'] = field.label 
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data.get('email') 
+        if commit:
+            user.save()
+        return user

@@ -1,12 +1,13 @@
 from django.shortcuts import render,redirect
 from .forms import UserRegistrationForm,CustomLoginForm,EditProfileForm,PasswordChangeForm
+from .forms import EmployerRegistrationForm
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth.models import User
-from .models import LoginHistory
+from .models import LoginHistory,EmployerProfile
 
 # registration for job seeker
 def register_seeker(request):
@@ -32,7 +33,33 @@ def register_seeker(request):
 
 # registration for job provider
 def register_employer(request):
-    return render(request,"register_employer.html")
+    if request.method == 'POST':
+        form = EmployerRegistrationForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            if User.objects.filter(email=email).exists():
+                messages.error(request, "An account with this email already exists.")
+            else:    
+                user = form.save(commit=False)
+                user.set_password(form.cleaned_data['password1'])
+                user.save()
+                EmployerProfile.objects.create(
+                    user=user,
+                    address=form.cleaned_data['address'],
+                    company_name=form.cleaned_data['company_name'],
+                    contact_person=form.cleaned_data['contact_person'],
+                    company_website=form.cleaned_data['company_website']
+                )
+                
+                messages.success(request, "Account has been created successfully.")
+                return redirect('login')
+
+        else:
+            messages.error(request, "Please fill all the fields.")
+    else:
+        form = EmployerRegistrationForm()
+    
+    return render(request,"register_employer.html",{"form":form})
 
 # login for both job_Seeker or job provider
 def not_logged_in(user):
@@ -66,7 +93,11 @@ def logout_view(request):
 @login_required
 def profile(request):
     user = request.user
-    return render(request,"profile.html",{'user':user})
+    try:
+        employer_profile = EmployerProfile.objects.get(user=user)
+    except EmployerProfile.DoesNotExist:
+        employer_profile = None
+    return render(request,"profile.html",{'user':user,'employer_profile': employer_profile})
 
 # edit profile 
 @login_required

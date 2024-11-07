@@ -17,6 +17,17 @@
     {% endif %}
     <div class="card">
         <div class="card-body">
+            
+            {% if employer_profile %}
+                <h3>Employer Information</h3>
+                <p class="card-text"><strong>Username:</strong> {{ user.username }}</p>
+                <p class="card-text"><strong>Email:</strong> {{ user.email }}</p>
+                <p class="card-text"><strong>Date Joined:</strong> {{ user.date_joined }}</p>
+                <p><strong>Company Name:</strong> {{ employer_profile.company_name }}</p>
+                <p><strong>Contact Person:</strong> {{ employer_profile.contact_person }}</p>
+                <p><strong>Address:</strong> {{ employer_profile.address }}</p>
+                <p><strong>Company Website:</strong> <a href="{{ employer_profile.company_website }}" target="_blank">{{ employer_profile.company_website }}</a></p>
+            {% else %}
             <h4 class="card-title">
                 {% if user.first_name or user.last_name %}
                     {{ user.first_name }} {{ user.last_name }}
@@ -30,6 +41,9 @@
             <p class="card-text"><strong>Username:</strong> {{ user.username }}</p>
             <p class="card-text"><strong>Email:</strong> {{ user.email }}</p>
             <p class="card-text"><strong>Date Joined:</strong> {{ user.date_joined }}</p>
+            
+            {% endif %}
+        
         </div>
         
     </div>
