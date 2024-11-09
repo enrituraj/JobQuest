@@ -1,4 +1,5 @@
-from django.shortcuts import render,redirect
+from django.http import HttpResponseForbidden
+from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Job
 from .forms import JobForm
@@ -26,3 +27,38 @@ def post_job(request):
 def job_list(request):
     jobs = Job.objects.all().order_by('-created_at')
     return render(request, 'job_list.html', {'jobs': jobs})
+
+@login_required
+def job_detail(request,job_id):
+    job = get_object_or_404(Job, id=job_id)
+    return render(request, 'job_detail.html', {'job': job})
+
+
+@login_required
+def edit_job(request,job_id):
+    job = get_object_or_404(Job, id=job_id)
+    if job.employer != request.user:
+        return HttpResponseForbidden("You are not allowed to edit this job.")
+
+    if request.method == 'POST':
+        form = JobForm(request.POST, instance=job)
+        if form.is_valid():
+            form.save()
+            return redirect('job_list')
+    else:
+        form = JobForm(instance=job)
+    
+    return render(request, 'edit_job.html', {'form': form})
+
+@login_required
+def delete_job(request,job_id):
+    job = get_object_or_404(Job, id=job_id)
+
+    if job.employer != request.user:
+        return HttpResponseForbidden("You are not allowed to delete this job.")
+
+    if request.method == 'POST':
+        job.delete()
+        return redirect('job_list')
+    
+    return render(request, 'delete_job.html', {'job': job})
