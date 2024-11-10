@@ -3,7 +3,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Job
 from .forms import JobForm
-
+from account.context_processors import add_user_type
 # Create your views here.
 @login_required
 def employer_dashboard(request):
@@ -12,6 +12,11 @@ def employer_dashboard(request):
 
 @login_required
 def post_job(request):
+    context = add_user_type(request)
+    is_company = context.get('is_company')
+    if not is_company:
+        return HttpResponseForbidden("You are not allowed to post a job.")
+
     if request.method == 'POST':
         form = JobForm(request.POST)
         if form.is_valid():
@@ -20,6 +25,7 @@ def post_job(request):
             job.save()
             return redirect('job_list')  # Redirect to a job listing or confirmation page
     else:
+        
         form = JobForm()
     return render(request, 'post_job.html', {'form': form})
 
