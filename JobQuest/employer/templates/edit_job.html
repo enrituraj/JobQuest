@@ -7,7 +7,26 @@
         <h2>Edit a New Job</h2>
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
+            
+            <div class="form-group mb-3">
+                {{ form.title.label_tag }}
+                {{ form.title }}
+            </div>
+            
+            <div class="form-group mb-3">
+                {{ form.description.label_tag }}
+                {{ form.description }}
+            </div>
+            
+            <div class="form-group mb-3">
+                {{ form.location.label_tag }}
+                {{ form.location }}
+            </div>
+            
+            <div class="form-group mb-3">
+                {{ form.salary.label_tag }}
+                {{ form.salary }}
+            </div>
             <button type="submit" class="btn btn-primary">Post Job</button>
         </form>
     </div>

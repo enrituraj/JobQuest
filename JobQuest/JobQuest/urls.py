@@ -23,4 +23,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include('account.urls')),
     path('employer/', include('employer.urls')),
+    path('job_seeker/', include('job_seeker.urls')),
 ]

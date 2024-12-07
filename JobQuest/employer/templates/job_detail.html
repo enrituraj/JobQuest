@@ -32,7 +32,7 @@
                                     <a href="{% url 'delete_job' job.id %}" class="btn btn-danger">Delete</a>
                                 {% endif %}
                                 {% if not is_company %}
-                                <a href="{% url 'edit_job' job.id %}" class="btn btn-primary mb-4">Apply now</a>
+                                <a href="{% url 'apply_job' job.id %}" class="btn btn-primary mb-4">Apply now</a>
                                 {% endif %}
 
                         </div>
